@@ -8,7 +8,11 @@ function initWaveSurfer() {
         progressColor: '#4CAF50',
         cursorColor: '#333',
         backend: 'MediaElement',
-        height: 200
+        height: 200,
+        plugins: [
+            WaveSurfer.regions.create()
+        ]
+    
     });
 
     wavesurfer.on('ready', function () {
@@ -20,14 +24,28 @@ function initWaveSurfer() {
           });
     }
 
+    document.getElementById('audioUpload').addEventListener('change', function(event) {
+        let files = event.target.files;
+        if (files.length > 0) {
+            let fileURL = URL.createObjectURL(files[0]);
+            wavesurfer.load(fileURL);
+        }
+    });
+
 // Play audio
 function playAudio() {
-    wavesurfer.playPause();
+    console.log('Play button clicked');
+    if (wavesurfer.isPlaying()) {
+        wavesurfer.play();
+    }
 }
 
 // Pause audio
 function pauseAudio() {
-    wavesurfer.playPause();
+    console.log('Pause button clicked');
+    if (!wavesurfer.isPlaying()) {
+        wavesurfer.pause();
+    }
 }
 
 // Stop audio
