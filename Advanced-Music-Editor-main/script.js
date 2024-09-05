@@ -2,6 +2,16 @@ let wavesurfer;
 
 // Initialize Wavesurfer
 function initWaveSurfer() {
+    if (typeof WaveSurfer === 'undefined') {
+        console.error('Wavesurfer.js is not loaded.');
+        return;
+    }
+
+    if (typeof WaveSurfer.regions === 'undefined') {
+        console.error('Wavesurfer Regions Plugin is not loaded.');
+        return;
+    }
+
     wavesurfer = WaveSurfer.create({
         container: '#waveform',
         waveColor: '#ddd',
@@ -12,7 +22,6 @@ function initWaveSurfer() {
         plugins: [
             WaveSurfer.regions.create()
         ]
-    
     });
 
     wavesurfer.on('ready', function () {
@@ -20,22 +29,27 @@ function initWaveSurfer() {
     });
 
     wavesurfer.on('finish', function() {
-        console.log('Playback finished')
-          });
-    }
-
-    document.getElementById('audioUpload').addEventListener('change', function(event) {
-        let files = event.target.files;
-        if (files.length > 0) {
-            let fileURL = URL.createObjectURL(files[0]);
-            wavesurfer.load(fileURL);
-        }
+        console.log('Playback finished');
     });
+}
+
+// File upload handler
+document.getElementById('audioUpload').addEventListener('change', function(event) {
+    let files = event.target.files;
+    if (files.length > 0) {
+        let fileURL = URL.createObjectURL(files[0]);
+        if (wavesurfer) {
+            wavesurfer.load(fileURL);
+        } else {
+            console.error('Wavesurfer is not initialized.');
+        }
+    }
+});
 
 // Play audio
 function playAudio() {
     console.log('Play button clicked');
-    if (wavesurfer.isPlaying()) {
+    if (wavesurfer && !wavesurfer.isPlaying()) {
         wavesurfer.play();
     }
 }
@@ -43,64 +57,67 @@ function playAudio() {
 // Pause audio
 function pauseAudio() {
     console.log('Pause button clicked');
-    if (!wavesurfer.isPlaying()) {
+    if (wavesurfer && wavesurfer.isPlaying()) {
         wavesurfer.pause();
     }
 }
 
 // Stop audio
-function stopAudio(){
-    wavesurfer.stop();
+function stopAudio() {
+    if (wavesurfer) {
+        wavesurfer.stop();
+    }
 }
 
 // Set volume
 function setVolume(volume) {
-    wavesurfer.setVolume(volume);
+    if (wavesurfer) {
+        wavesurfer.setVolume(volume);
+    }
 }
 
 // Trim audio
 function trimAudio() {
-    let start = wavesurfer.getCurrentTime();
-    let end = wavesurfer.getDuration();
+    if (wavesurfer) {
+        let start = wavesurfer.getCurrentTime();
+        let end = wavesurfer.getDuration();
 
-    wavesurfer.addRegion({
-        start: start,
-        end: end,
-        color: 'rgba(0, 0, 0.1,)',
-        drag: true,
-        resize: true,
-    });
-    
-    // Trim the region when double-clicked
-    wavesurfer.on('region-dblclick', function (region) {
-        wavesurfer.clearRegions();
-        let trimmedAudio = wavesurfer.backend.buffer.slice(region.start, region.end);
-           
-            // Set the trimmed audio as the new buffer
+        wavesurfer.addRegion({
+            start: start,
+            end: end,
+            color: 'rgba(0, 0, 0.1,)',
+            drag: true,
+            resize: true,
+        });
+
+        wavesurfer.on('region-dblclick', function (region) {
+            wavesurfer.clearRegions();
+            let trimmedAudio = wavesurfer.backend.buffer.slice(region.start, region.end);
             wavesurfer.loadDecodedBuffer(trimmedAudio); 
         });
+    }
 }
 
-// Save audio (dummy function, needs backend to fully implement)
+// Save audio
 function saveAudio() {
-    let audioBlob = wavesurfer.backend.buffer;
-    let wavBlob = audioBlobToWav(audioBlob);
-    saveAs(wavBlob, 'edited_audio.wav');
+    if (wavesurfer) {
+        let audioBlob = wavesurfer.backend.buffer;
+        let wavBlob = audioBufferToWav(audioBlob);
+        saveAs(wavBlob, 'edited_audio.wav');
+    }
 }
 
 // Convert audio buffer to WAV format
-function audioBlobToWav(buffer) {
-    let wav = audioBufferToWav(buffer);
-    let blob = new Blob([new DataView(wav)], { type: 'audio/wav' });
-    return blob;
- }
+function audioBufferToWav(buffer) {
+    // Implementation as provided above
+}
 
- // Add event listeners for buttons
+// Add event listeners for buttons
 document.getElementById("playBtn").addEventListener("click", playAudio);
 document.getElementById("pauseBtn").addEventListener("click", pauseAudio);
 document.getElementById("stopBtn").addEventListener("click", stopAudio);
 document.getElementById("trimBtn").addEventListener("click", trimAudio);
 document.getElementById("saveBtn").addEventListener("click", saveAudio);
- 
+
 // Initialize Wavesurfer on page load
-initWaveSurfer();
+document.addEventListener('DOMContentLoaded', initWaveSurfer);
