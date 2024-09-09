@@ -45,4 +45,4 @@ License
 This project is open-source and available under the MIT License.
 Contact
 If you have any questions, suggestions, or feedback, feel free to reach out:
-	•	Email:shawnchan24@gmail.com • GitHub: shawnchan24
+	•	Email:shawnchan24@gmail.com • GitHub: shawnchan24  Link to Slideshow: https://docs.google.com/presentation/d/1P_dpTxuuz9sulczPpSm_cJOSL3awzkON/pub?start=false&loop=false&delayms=30000
