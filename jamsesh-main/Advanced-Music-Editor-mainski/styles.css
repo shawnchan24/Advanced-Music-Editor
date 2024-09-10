@@ -1,0 +1,93 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+/* Header */
+h1 {
+    font-size: 2.5rem;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+/* Audio Upload Section */
+#audioUpload {
+    display: block;
+    margin-bottom: 20px;
+}
+
+#audioPlayer {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 20px;
+}
+
+/* Waveform Container */
+#waveform {
+    width: 100%;
+    max-width: 600px;
+    height: 200px;
+    margin-bottom: 20px;
+    background-color: #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Editor Controls */
+#editorControls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#editorControls button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+#editorControls button:hover {
+    background-color: #45a049;
+}
+
+#editorControls label {
+    font-size: 1rem;
+    color: #333;
+}
+
+#editorControls input[type="range"] {
+    width: 100%;
+    max-width: 300px;
+    margin-top: 10px;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    #audioPlayer,
+    #waveform {
+        max-width: 100%;
+    }
+
+    #editorControls {
+        flex-direction: column;
+    }
+}
